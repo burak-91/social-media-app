@@ -17,9 +17,20 @@ app.use(cors());
 app.use('/posts', postRoutes);
 
 
+const connect = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO,{ useUnifiedTopology: true, useNewUrlParser: true });
+    console.log("Connected to mongoDB.");
+  } catch (error) {
+    throw error;
+  }
+};
 
-mongoose.connect(process.env.MONGO, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => app.listen(process.env.PORT, () => console.log(`Server Running on Port: http://localhost:5002`)))
-  .catch((error) => console.log(`${error} did not connect`));
+
+app.listen(process.env.PORT, () => {
+  connect();
+  console.log("Connected to backend.");
+});
+
 
 mongoose.set('useFindAndModify', false);
